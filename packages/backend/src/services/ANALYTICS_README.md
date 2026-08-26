@@ -35,8 +35,7 @@ Returns time-series event data with configurable grouping:
 - Returns array of {date, eventCount}
 
 **Optimizations:**
-- Uses `events_hourly` continuous aggregate when possible
-- Falls back to `time_bucket()` for custom queries
+- Uses PostgreSQL `date_bin()` with a fixed UTC origin
 - Indexed timestamp queries
 
 #### `getEventTypeDistribution(taskId, userId, filters)`
