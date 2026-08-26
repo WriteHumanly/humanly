@@ -18,15 +18,17 @@ docker run --detach --rm \
   postgres:15.13-alpine3.20 >/dev/null
 
 for _ in $(seq 1 60); do
-  if docker exec "$container_name" pg_isready \
-    -U humanly_analytics_test -d humanly_analytics_test >/dev/null 2>&1; then
+  if docker exec "$container_name" sh -c \
+    'test "$(cat /proc/1/comm)" = postgres && pg_isready -U humanly_analytics_test -d humanly_analytics_test' \
+    >/dev/null 2>&1; then
     break
   fi
   sleep 1
 done
 
-if ! docker exec "$container_name" pg_isready \
-  -U humanly_analytics_test -d humanly_analytics_test >/dev/null 2>&1; then
+if ! docker exec "$container_name" sh -c \
+  'test "$(cat /proc/1/comm)" = postgres && pg_isready -U humanly_analytics_test -d humanly_analytics_test' \
+  >/dev/null 2>&1; then
   echo "Analytics PostgreSQL fixture did not become ready." >&2
   docker logs "$container_name" >&2 || true
   exit 1
