@@ -311,13 +311,21 @@ export class AnalyticsService {
             AND ($3::timestamptz IS NULL OR de.timestamp <= $3::timestamptz)
             AND ($4::text IS NULL OR u.email = $4::text)
             AND ($5::text IS NULL OR de.event_type = $5::text)
+        ),
+        bucketed_events AS (
+          SELECT date_bin(
+            '${bucketInterval}',
+            timestamp AT TIME ZONE 'UTC',
+            TIMESTAMPTZ '2000-01-03 00:00:00+00'
+          ) AS bucket
+          FROM all_events
         )
         SELECT
-          TO_CHAR(time_bucket('${bucketInterval}', timestamp), '${dateFormat}') as date,
+          TO_CHAR(bucket AT TIME ZONE 'UTC', '${dateFormat}') as date,
           COUNT(*)::integer as "eventCount"
-        FROM all_events
-        GROUP BY time_bucket('${bucketInterval}', timestamp)
-        ORDER BY time_bucket('${bucketInterval}', timestamp) ASC
+        FROM bucketed_events
+        GROUP BY bucket
+        ORDER BY bucket ASC
       `;
 
       const params = [

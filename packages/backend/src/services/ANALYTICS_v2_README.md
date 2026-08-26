@@ -457,9 +457,9 @@ Source timestamps:
 Grouping:
 
 ```text
-groupBy=hour -> time_bucket('1 hour', timestamp)
-groupBy=day  -> time_bucket('1 day', timestamp)
-groupBy=week -> time_bucket('1 week', timestamp)
+groupBy=hour -> date_bin('1 hour', timestamp, UTC origin)
+groupBy=day  -> date_bin('1 day', timestamp, UTC origin)
+groupBy=week -> date_bin('1 week', timestamp, UTC Monday origin)
 ```
 
 Date formatting:

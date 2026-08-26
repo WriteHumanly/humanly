@@ -165,6 +165,9 @@ jobs:
       - name: Run runnable tests
         run: pnpm test:runnable
 
+      - name: Verify Analytics on PostgreSQL 15
+        run: pnpm --filter @humanly/backend test:analytics-postgres
+
       - name: Audit discovered tests
         run: pnpm test:audit
 
