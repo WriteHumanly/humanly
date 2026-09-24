@@ -20,7 +20,6 @@ const PASS_THROUGH_PREFIXES = [
 ];
 const PASS_THROUGH_PATHS = new Set([
   '/favicon.ico',
-  '/icon.svg',
   '/apple-icon.png',
   '/manifest.json',
   '/robots.txt',
